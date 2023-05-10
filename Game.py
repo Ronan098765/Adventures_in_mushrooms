@@ -1,5 +1,5 @@
 from pygame import *
-
+from random import randint
 
 
 font.init()
@@ -12,6 +12,8 @@ img_back = 'Fon.jpg'
 img_bul_R = 'Bullet_R.png'
 img_player = 'Player.png'
 img_bul_L = 'Bullet_L.png'
+
+
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, size_x, size_y, player_speed):
@@ -33,10 +35,26 @@ class Player(GameSprite):
             self.rect.y -= self.speed
         if keys[K_s] and self.rect.y < win_height - 70:
             self.rect.y += self.speed
-        if keys[K_a] and self.rect.x > 70:
+        if keys[K_a] and self.rect.x > 0:
             self.rect.x -= self.speed
         if keys[K_d] and self.rect.x < win_width - 70:
             self.rect.x += self.speed
+
+class Bullet(GameSprite):
+    def update(self):
+        self.rect.x -= self.speed
+        global bullets_num
+        if self.rect.x < 0:
+            self.kill()
+            bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,10))
+            bullets.add(bullet)
+
+    
+
+
+
+
+
 
 win_width = 700
 win_height = 500
@@ -45,6 +63,16 @@ window = display.set_mode((win_width, win_height))
 background = transform.scale(image.load(img_back), (win_width, win_height))
 
 loh = Player(img_player, 350, 250, 70, 70, 10)
+
+bullets = sprite.Group()
+
+
+for i in range(1, 6):
+    bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,10))
+    bullets.add(bullet)
+
+
+
 
 
 finish = False
@@ -60,11 +88,14 @@ while game:
 
     if not finish:
         window.blit(background,(0, 0))
-       
-        loh.reset()
         loh.update()
+        loh.reset()
+        
+        bullets.update()
+        
 
-
+        bullets.draw(window)
+        
 
 
 
