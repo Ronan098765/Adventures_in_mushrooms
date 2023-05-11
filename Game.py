@@ -46,10 +46,17 @@ class Bullet(GameSprite):
         global bullets_num
         if self.rect.x < 0:
             self.kill()
-            bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,10))
+            bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,15))
             bullets.add(bullet)
 
-    
+class Bullet_r(GameSprite):
+    def update(self):
+        self.rect.x += self.speed
+        global bullets_num
+        if self.rect.x > 700:
+            self.kill()
+            bullet_r = Bullet_r(img_bul_R, 0, randint(50, win_height - 50), 20, 10, randint(5,15))
+            bullets_r.add(bullet_r)  
 
 
 
@@ -62,15 +69,17 @@ display.set_caption('Game')
 window = display.set_mode((win_width, win_height))
 background = transform.scale(image.load(img_back), (win_width, win_height))
 
-loh = Player(img_player, 350, 250, 70, 70, 10)
+loh = Player(img_player, 350, 250, 60, 80, 10)
 
 bullets = sprite.Group()
-
+bullets_r = sprite.Group()
 
 for i in range(1, 6):
-    bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,10))
+    bullet = Bullet(img_bul_L, 700, randint(50, win_height - 50), 20, 10, randint(5,15))
     bullets.add(bullet)
-
+for i in range(1, 6):
+    bullet_r = Bullet_r(img_bul_R, 0, randint(50, win_height - 50), 20, 10, randint(5,15))
+    bullets_r.add(bullet_r) 
 
 
 
@@ -92,8 +101,8 @@ while game:
         loh.reset()
         
         bullets.update()
-        
-
+        bullets_r.update()
+        bullets_r.draw(window)
         bullets.draw(window)
         
 
